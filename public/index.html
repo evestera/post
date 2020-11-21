@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Post i dag?</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="shortcut icon" sizes="192x192" href="/icon.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+    <style media="screen">
+    body {
+      font-family: sans-serif;
+      font-size: 180%;
+    }
+
+    main {
+      max-width: 500px;
+      margin: auto;
+    }
+
+    input, button {
+      font-size: 100%;
+    }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Post i dag?</h1>
+      <p>Fyll inn postnummer og trykk på knappen:</p>
+      <form onsubmit="event.preventDefault(); location.href = '/' + document.querySelector('input').value;">
+        <input placeholder="Postnr" pattern="[0-9]{4}" />
+        <button>Sjekk</button>
+      </form>
+    </main>
+
+    <script>
+    const postnr = location.pathname.replace(/[^0-9]/g, '');
+    if (postnr) {
+      const h1 = document.querySelector('h1');
+      const p = document.querySelector('p');
+      h1.textContent = "Laster...";
+      p.textContent = "";
+      fetch('https://europe-west1-post-i-dag.cloudfunctions.net/neste?postnr=' + postnr)
+        .then(res => res.text())
+        .then(res => {
+          if (res.includes("i dag")) {
+            h1.textContent = "Ja";
+            p.textContent = `${postnr} får post i dag`;
+          } else if (res) {
+            h1.textContent = "Nei";
+            p.textContent = `Neste postdag for ${postnr} er ${res}`;
+          } else {
+            h1.textContent = "Nei(?)";
+            p.textContent = `Ingen kommende postdager. Sikker på at ${postnr} er et gyldig postnummer?`;
+          }
+        })
+        .catch(err => {
+          h1.textContent = "Hups!";
+          p.textContent = `Noe gikk galt ved henting av postdager: ${err}`;
+        });
+    }
+    </script>
+  </body>
+</html>
