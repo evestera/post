@@ -40,7 +40,7 @@
     if (postnr) {
       const h1 = document.querySelector('h1');
       const p = document.querySelector('p');
-      h1.textContent = "Laster...";
+      h1.textContent = "Sjekker...";
       p.textContent = "";
       fetch('https://europe-west1-post-i-dag.cloudfunctions.net/neste?postnr=' + postnr)
         .then(res => res.text())
@@ -60,6 +60,14 @@
           h1.textContent = "Hups!";
           p.textContent = `Noe gikk galt ved henting av postdager: ${err}`;
         });
+
+      const pageLoaded = new Date();
+      setInterval(() => {
+        const now = new Date();
+        if (pageLoaded.getDate() !== now.getDate()) {
+          location.reload();
+        }
+      }, 1000);
     }
     </script>
   </body>
