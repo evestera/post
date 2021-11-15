@@ -18,7 +18,7 @@ exports.neste = functions.region('europe-west1').https.onRequest((request, respo
     response.send('Feil: ?postnr=nnnn manglet.');
     return;
   }
-  fetch('https://www.posten.no/levering-av-post-2020/_/component/main/1/leftRegion/1?postCode=' + postnr, {
+  fetch('https://www.posten.no/levering-av-post/_/component/main/1/leftRegion/1?postCode=' + postnr, {
     headers: {
       "Accept": "*/*",
       "x-requested-with": "XMLHttpRequest"
