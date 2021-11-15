@@ -42,11 +42,15 @@
     <script>
     const postnr = location.pathname.replace(/[^0-9]/g, '');
     if (postnr) {
+      const functionUrl =
+        window.location.hostname === "localhost"
+          ? "http://localhost:5001/post-i-dag/europe-west1/neste"
+          : "https://europe-west1-post-i-dag.cloudfunctions.net/neste";
       const h1 = document.querySelector('h1');
       const p = document.querySelector('p');
       h1.textContent = "Sjekker...";
       p.textContent = "";
-      fetch('https://europe-west1-post-i-dag.cloudfunctions.net/neste?postnr=' + postnr)
+      fetch(functionUrl + '?postnr=' + postnr)
         .then(res => {
           if (res.status > 399) {
             return res.text().then(text => {

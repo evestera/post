@@ -8,6 +8,9 @@ function setCorsHeader(request, response) {
   if (request.get('origin') == 'https://post.vestera.as') {
     response.set('Access-Control-Allow-Origin', 'https://post.vestera.as');
   }
+  if (process.env.FUNCTIONS_EMULATOR) {
+    response.set('Access-Control-Allow-Origin', '*');
+  }
 }
 
 exports.neste = functions.region('europe-west1').https.onRequest((request, response) => {
